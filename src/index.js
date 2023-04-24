@@ -10,21 +10,21 @@ function extractLinks(text) {
   const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
   const catchRegex = [...text.matchAll(regex)]
   const result = catchRegex.map(captura => ({[captura[1]]: captura[2]}));
-  return result;
+  return result.length !== 0 ? result : chalk.red('Não há links no arquivo');
 }
 
 function handleError(error) {
-  throw new Error(chalk.red(error.code, 'não há arquivo no diretório'));
+  throw new Error(chalk.red(error.code, 'Ocorreu um erro durante a execução. Favor tentar novamente'));
 }
 
 // Promessa com then/catch
 function showFile(filePath) {
-  fs.promises.readFile(filePath, 'utf-8')
-    .then((text) => console.log(extractLinks(text)))
-    .catch(handleError)
+  return fs.promises.readFile(filePath, 'utf-8')
+    .then((text) => extractLinks(text))
+    .catch((error) => handleError(error))
 }
 
-showFile('./src/teste.md')
+module.exports = {showFile, handleError};
 
 /*
 // Promessa com new Promise()
