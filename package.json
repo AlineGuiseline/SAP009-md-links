@@ -11,8 +11,7 @@
     "node": ">=16.x"
   },
   "scripts": {
-    "cli": "node src/cli.js ./files/teste.md",
-    "cli:validate": "node src/cli.js ./files/teste.md --validate"
+    "cli": "node ./src/cli.js"
 
   },
   "bootcamp": {
