@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-console.log('Oi, CLI!');
 
 const {mdLinks} = require('./index.js');
 
