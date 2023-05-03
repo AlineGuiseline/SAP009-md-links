@@ -10,9 +10,8 @@
   "engines": {
     "node": ">=16.x"
   },
-  "scripts": {
-    "cli": "node ./src/cli.js"
-
+  "bin": {
+    "mdLinks": "./src/cli.js"
   },
   "bootcamp": {
     "createdAt": "2023-03-30T13:20:37.337Z",
