@@ -1,4 +1,21 @@
+const fs = require('fs')
 const chalk = require("chalk");
+
+function extractLinks(filePath) {
+  const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
+
+  return fs.promises.readFile(filePath, 'utf-8')
+    .then((text) => {
+      const captures = [...text.matchAll(regex)];
+      const results = captures.map((capture) => ({
+        file: filePath,
+        href: capture[2],
+        text: capture[1],
+      }));
+      return results;
+    })
+    .catch((error) => {throw new Error(chalk.red(error.code, 'Não existe arquivo no diretório indicado'))});
+}
 
 function checkStatus(listOfURLs) {
   return Promise.all(
@@ -6,16 +23,16 @@ function checkStatus(listOfURLs) {
       return fetch(url)
       .then(response => {
         if (response.ok) {
-          return `${chalk.green('OK')} | ${chalk.green(response.status)}`
+          return `${chalk.green('✅ OK')} | ${chalk.green(response.status)}`
         } else {
-          return `${chalk.red('FAIL')} |  ${chalk.red(response.status)}`
+          return `${chalk.red('❌ FAIL')} |  ${chalk.red(response.status)}`
         }
       })
       .catch(error => {
         if (error.cause.code === 'ENOTFOUND') {
           return chalk.red('O link não foi encontrado');
         } else {
-          return chalk.red('Ops... Ocorreu algum erro');
+          return chalk.red('Ocorreu algum erro');
         }
       })
     })
@@ -38,12 +55,9 @@ function checkStatusOfLinks (listOfLinks) {
 
   return checkStatus(listOfLinks.map((targetLink) => targetLink.href))
   .then((linkStatus) => {
-    const brokenLinks = linkStatus.filter(status => status.startsWith(chalk.red('FAIL'))).length;
+    const brokenLinks = linkStatus.filter(status => status.startsWith(chalk.red('❌ FAIL')) || status.startsWith(chalk.red('O link não foi encontrado')) || status.startsWith(chalk.red('Ocorreu algum erro'))).length;
     return {totalLinks, uniqueLinks, brokenLinks};
   })
-  .catch((error) => {
-    console.log(error)
-  });
 }
 
-module.exports = {checkStatus, validatedList, checkStatusOfLinks}
+module.exports = {extractLinks, checkStatus, validatedList, checkStatusOfLinks}

@@ -1,10 +1,2 @@
-const mdLinks = require('../');
-
-
-describe('mdLinks', () => {
-
-  it('should...', () => {
-    console.log('FIX ME!');
-  });
-
-});
+const chalk = require('chalk');
+const {mdLinks} = require('../src/index.js');

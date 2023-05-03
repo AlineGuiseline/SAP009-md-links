@@ -1,22 +1,6 @@
 const fs = require('fs')
 const chalk = require('chalk');
-const {checkStatusOfLinks, validatedList} = require('./validation.js')
-
-function extractLinks(filePath) {
-  const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
-
-  return fs.promises.readFile(filePath, 'utf-8')
-    .then((text) => {
-      const captures = [...text.matchAll(regex)];
-      const results = captures.map((capture) => ({
-        file: filePath,
-        href: capture[2],
-        text: capture[1],
-      }));
-      return results;
-    })
-    .catch((error) => {throw new Error(chalk.red(error.code, 'Não existe arquivo no diretório indicado'))});
-}
+const {extractLinks, checkStatusOfLinks, validatedList} = require('./validation.js');
 
 function mdLinks(path, options) {
   if (fs.lstatSync(path). isDirectory()) {
@@ -28,25 +12,25 @@ function mdLinks(path, options) {
           if (options.stats && options.validate) {
             checkStatusOfLinks(result)
             .then(({totalLinks, uniqueLinks, brokenLinks}) => {
-              console.log(chalk.yellow(`Estatísticas dos links do arquivo: ${chalk.black.bgGreen(fileName)}\n${chalk.magenta('Total:')} ${chalk.magenta(totalLinks)}\n${chalk.blue('Unique:')} ${chalk.blue(uniqueLinks)}\n${chalk.blue('Broken:')} ${chalk.blue(brokenLinks)}`))
+              console.log(chalk.yellow(`--- Estatísticas totais dos links do arquivo: ${chalk.black.bgGreen(fileName)}\n${chalk.magenta('Total:')} ${chalk.magenta(totalLinks)}\n${chalk.cyan('Unique:')} ${chalk.cyan(uniqueLinks)}\n${chalk.red('Broken:')} ${chalk.red(brokenLinks)}`))
             })
           } else if (options.stats) {
             checkStatusOfLinks(result)
               .then(({totalLinks, uniqueLinks}) => {
-                console.log(chalk.yellow(`Estatísticas dos links do arquivo: ${chalk.underline.yellow(fileName)}\n${chalk.magenta('Total:')} ${chalk.magenta(totalLinks)}\n${chalk.blue('Unique:')} ${chalk.blue(uniqueLinks)}`))
+                console.log(chalk.yellow(`--- Estatísticas dos links do arquivo: ${chalk.black.bgGreen(fileName)}\n${chalk.magenta('Total:')} ${chalk.magenta(totalLinks)}\n${chalk.cyan('Unique:')} ${chalk.cyan(uniqueLinks)}`))
               })
           } else if (options.validate) {
             validatedList(result)
              .then((category) => {
               console.log(chalk.yellow('--- Lista de links válidos:'),
-              chalk.yellow(fileName)),
-              category.map(({text, href, file, status}) => console.log(`${chalk.blue(file)} | ${chalk.blue(text)} | ${chalk.blue(href)} | ${status} `))});
+              chalk.black.bgGreen(fileName)),
+              category.map(({text, href, file, status}) => console.log(`${chalk.blue(file)} | ${chalk.magenta(text)} | ${chalk.cyan(href)} | ${status} `))});
           } else if (result.length === 0) {
-              console.log(chalk.red(`Não há links no arquivo ${chalk.underline.red(fileName)}`))
+            console.log(chalk.red(`Não há links no arquivo ${chalk.underline.red(fileName)}`))
           } else {
-              console.log(chalk.black.bgGreen('--- Lista de links:'),
-              chalk.yellow(fileName)),
-              result.map(({text, href, file}) => console.log(`${chalk.green(text)} \n href: ${chalk.blue(href)} \n pasta: ${chalk.magenta(file)}`));
+            console.log(chalk.black.bgGreen('--- Lista de links:'),
+            chalk.yellow(fileName)),
+            result.map(({text, href, file}) => console.log(`${chalk.green(text)} \n href: ${chalk.blue(href)} \n pasta: ${chalk.magenta(file)}`));
           }
         })
       })
@@ -57,26 +41,26 @@ function mdLinks(path, options) {
         if (options.stats && options.validate) {
           checkStatusOfLinks(links)
             .then(({ totalLinks, uniqueLinks, brokenLinks }) => {
-              console.log(chalk.yellow(`\n Estatísticas dos links:\n${chalk.magenta('- Total:')} ${chalk.magenta(totalLinks)}\n${chalk.blue('- Unique:')} ${chalk.blue(uniqueLinks)}\n${chalk.cyan('- Broken:')} ${chalk.cyan(brokenLinks)}`))
+              console.log(chalk.yellow(`\n Estatísticas totais dos links:\n${chalk.magenta('- Total:')} ${chalk.magenta(totalLinks)}\n${chalk.cyan('- Unique:')} ${chalk.cyan(uniqueLinks)}\n${chalk.red('- Broken:')} ${chalk.red(brokenLinks)}`))
             })
         } else if (options.stats) {
           checkStatusOfLinks(links)
             .then(({ totalLinks, uniqueLinks }) => {
-              console.log(chalk.yellow(`\n Estatísticas dos links: \n${chalk.magenta('- Total:')} ${chalk.magenta(totalLinks)}\n${chalk.blue('- Unique:')} ${chalk.blue(uniqueLinks)}`))
+              console.log(chalk.yellow(`\n Estatísticas dos links: \n${chalk.magenta('- Total:')} ${chalk.magenta(totalLinks)}\n${chalk.cyan('- Unique:')} ${chalk.cyan(uniqueLinks)}`))
             })
         } else if (options.validate) {
           validatedList(links)
             .then((category) => {
             console.log(chalk.yellow('--- Lista de links válidos:')),
-            category.map(({text, href, file, status}) => console.log(`${chalk.blue(file)} | ${chalk.blue(text)} | ${chalk.blue(href)} | ${status} `))});
+            category.map(({text, href, file, status}) => console.log(`${chalk.blue(file)} | ${chalk.magenta(text)} | ${chalk.cyan(href)} | ${status} `))});
         } else if (links.length === 0) {
-            console.log(chalk.red('\n', 'Não há links no arquivo'))
+            console.log(chalk.red('\n', 'Não há links no arquivo indicado'))
         } else {
           console.log(chalk.black.bgGreen('--- Lista de links:')),
           links.map(({text, href, file}) => console.log(`${chalk.green(text)} \n href: ${chalk.blue(href)} \n pasta: ${chalk.magenta(file)}`));
         }
     })
-  } 
+  }
 }
 
 module.exports = {mdLinks};
