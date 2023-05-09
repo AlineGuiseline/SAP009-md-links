@@ -1,5 +1,4 @@
 const fs = require('fs')
-const chalk = require('chalk');
 const {extractLinks, checkStatusOfLinks, validatedList} = require('./validation.js');
 
 function isFile(path) {
@@ -24,8 +23,7 @@ function isDirectory(path) {
 //coordena a análise do arquivo ou diretório
 function mdLinks(path, options) {
   if (!isFile(path) && !isDirectory(path)) {
-    console.log(chalk.redBright('Arquivo ou diretório não existe'));
-    return;
+    throw new Error('Arquivo ou diretório não existe');
   }
    if (isDirectory(path)) {
     return fs.promises.readdir(path)
@@ -41,8 +39,7 @@ function mdLinks(path, options) {
   }
   if (isFile(path)) {
     if (!path.endsWith('.md')) {
-      extractLinks(path);
-      console.log(chalk.red('Extensão inválida'));
+      throw new Error('Extensão inválida')
     } else {
       return extractLinks(path)
         .then(links => {
