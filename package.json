@@ -1,17 +1,19 @@
 {
-  "name": "md-links",
+  "name": "md-links-lineguise",
   "version": "0.1.0",
   "description": "Quarto projeto junto ao bootcamp da Laboratória",
   "keywords": [
     "node",
-    "markdown"
+    "markdown",
+    "cli"
   ],
   "author": "Aline Guiseline",
+  "license": "MIT",
   "engines": {
     "node": ">=16.x"
   },
   "bin": {
-    "mdLinks": "./src/cli.js"
+    "md-links": "./src/cli.js"
   },
   "scripts": {
     "test": "jest --verbose --coverage",
