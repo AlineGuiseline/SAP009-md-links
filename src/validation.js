@@ -25,7 +25,7 @@ function checkStatus(listOfURLs) {
         if (response.ok) {
           return `${chalk.green('✅ OK')} | ${chalk.green(response.status)}`
         } else {
-          return `${chalk.red('❌ FAIL')} |  ${chalk.red(response.status)}`
+          return `${chalk.red('❌ FAIL')} | ${chalk.red(response.status)}`
         }
       })
       .catch(error => {
