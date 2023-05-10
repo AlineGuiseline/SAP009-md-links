@@ -34,7 +34,7 @@ Neste projeto, foi criada uma biblioteca, executável através de linha de coman
 
 1. Para realizar a instalação, execute o seguinte comando no terminal `npm install md-links-lineguise`
 
-2. Executando o comando `md-links ./caminhoDaPasta` ou `md-links ./caminhoDaPasta/nomeDoArquivo.md`, os links serão retornados da seguinte maneira:
+2. Executando o comando `mdLinks ./caminhoDaPasta` ou `mdLinks ./caminhoDaPasta/nomeDoArquivo.md`, os links serão retornados da seguinte maneira:
 
 ![Desktop](./readme-assets/lista-de-links.png)
 
